@@ -1,49 +1,41 @@
-// Import the 'Product' and 'Cart' models
 const Product = require("../models/product");
 const Cart = require("../models/cart");
 
-// Define a function to handle the route for displaying all products
 exports.getProducts = (req, res, next) => {
-  // Fetch all products and pass them to the 'product-list' view for rendering
-  Product.fetchAll()
-  .then(([row, fielddata]) => {
+  Product.findAll().then(products=>{
     res.render("shop/product-list", {
-      prods: row,
+      prods: products,
       pageTitle: "All Products",
       path: "/products",
     });
+  }).catch(err=>{
+    console.log(err)
   })
-  .catch((err) => {
-    console.log(err);
-  });;
 };
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findById(prodId)
-    .then(([product]) => {
+  Product.findByPk(prodId)
+    .then(product => {
       res.render('shop/product-detail', {
-        product: product[0],
+        product: product,
         pageTitle: product.title,
         path: '/products'
       });
     })
     .catch(err => console.log(err));
 };
-
 // Define a function to handle the route for displaying the main shop page
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
-    .then(([row, fielddata]) => {
-      res.render("shop/index", {
-        prods: row,
-        pageTitle: "Shop",
-        path: "/",
-      });
-    })
-    .catch((err) => {
-      console.log(err);
+  Product.findAll().then(products=>{
+    res.render("shop/index", {
+      prods: products,
+      pageTitle: "Shop",
+      path: "/",
     });
+  }).catch(err=>{
+    console.log(err)
+  })
 };
 
 // Define a function to handle the route for displaying the shopping cart
@@ -87,14 +79,16 @@ exports.postCart = (req, res, next) => {
 // Define a function to handle removing a product from the cart
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId).then(([product])=>{
-    product => {
-      Cart.deleteProduct(prodId, product.price);
-      res.redirect("/cart");
-    }
-  }).catch(err=>{
-    console.log(err)
-  })
+  Product.findById(prodId)
+    .then(([product]) => {
+      (product) => {
+        Cart.deleteProduct(prodId, product.price);
+        res.redirect("/cart");
+      };
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 // Define a function to handle the route for displaying the user's orders

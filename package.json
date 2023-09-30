@@ -16,10 +16,10 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "ejs": "^2.6.1",
-    "express": "^4.18.2",
+    "express": "^4.16.3",
     "express-handlebars": "^3.0.0",
-    "mysql2": "^3.6.1",
+    "mysql2": "^1.6.1",
     "pug": "^2.0.3",
-    "sequelizer": "^1.1.4"
+    "sequelize": "^5.0.0-beta.11"
   }
 }
